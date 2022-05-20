@@ -1,0 +1,110 @@
+            <ul class="navbar-nav ml-auto">
+            <li class="nav-item ml-auto">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </nav>
+<style>
+.hoder {
+    max-width: 50%;
+    width: fit-content;
+    background-color: #D7D7D7;
+    border-radius: 4px;
+    margin-top: 4px;
+    box-sizing: border-box;
+    left: auto;
+    /* align-self: flex-start; */
+    /* flex: 0 1 auto; */
+}
+
+.hoder:hover {
+    background-color: silver;
+}
+
+.me {
+    max-width: 50%;
+    width: fit-content;
+    background-color: greenyellow;
+    border-radius: 4px;
+    margin-top: 4px;
+    box-sizing: border-box;
+    margin-left: auto
+    /* align-self: flex-end; */
+}
+
+.me:hover {
+    background-color: yellowgreen;
+}
+</style>
+<div class="container col-lg-5" >
+    <h1>Real Time Messaging</h1>
+    {{!-- <pre id="messages" data-roomid="{{roomid}}" data-userid="{{userid}}" style="height: 400px; overflow: scroll"></pre> --}}
+    <div id="chat" data-roomid="{{roomid}}" data-userid="{{userid}}" style="height: 400px; overflow: scroll">
+        {{#each messages}}
+        <div style= "display: block;" class="{{this.style}} p-1">
+            {{this.message}}
+        </div>
+        {{/each}}
+    </div>
+    <input type="text" id="messageBox" placeholder="Type your message here" style="display: block; width: 100%; margin-bottom: 10px; padding: 10px;" />
+    <button id="send" class ="btn btn-success" title="Send Message!" style="width: 100%;">Send Message</button>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const sendBtn = document.querySelector('#send');
+    const messageBox = document.querySelector('#messageBox');
+    const chatBox = document.getElementById("chat")
+    const {userid, roomid} = chatBox.dataset
+
+    const socket = io()
+    socket.emit("joinRoom", roomid)
+
+    socket.on("joined", m => {
+        console.log(m)
+    })
+
+    //get message form server
+    socket.on("message", get => {
+        showMessage(get.message, "hoder")
+    })
+    
+    //send message to server
+    sendBtn.onclick = function sendMessage() {
+        socket.emit("chat", {user: userid, message: messageBox.value, room: roomid, time: new Date()})
+        showMessage(messageBox.value, "me");
+    }
+
+    messageBox.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault()
+            sendBtn.click()
+        }
+    })
+        
+    function showMessage(content, term) {
+        let show = document.createElement('div')
+        show.innerHTML = content
+        show.classList.add(term)
+        chatBox.appendChild(show);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        messageBox.value = '';
+    }
+
+</script>
+    <!-- <script>
+        const socket = new WebSocket('ws://localhost:8080');
+
+    // Connection opened
+    socket.addEventListener('open', function (event) {
+        socket.send('Hello Server!');
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+        console.log('Message from server ', event.data);
+    });
+
+    const sendMessage = () =>{
+        socket.send("Hello Form Client")
+    }
+    </script> -->

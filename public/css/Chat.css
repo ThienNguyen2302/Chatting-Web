@@ -1,0 +1,42 @@
+
+#chat {
+    /* display: flex;
+    flex-direction: column;
+    flex-wrap: wrap; */
+    overflow-y: scroll;
+    max-height: 80vh;
+    padding: 16px;
+    max-width: 400px;
+    margin: auto;
+    border-radius: 8px;
+
+}
+
+.hoder {
+    max-width: 50%;
+    width: fit-content;
+    background-color: #D7D7D7;
+    border-radius: 4px;
+    margin-top: 4px;
+    box-sizing: border-box;
+    left: auto;
+    /* align-self: flex-start; */
+    /* flex: 0 1 auto; */
+}
+
+.hoder:hover {
+    background-color: silver;
+}
+
+.me {
+    background-color: greenyellow;
+    margin-left: auto
+    /* align-self: flex-end; */
+}
+
+.me:hover {
+    background-color: yellowgreen;
+}
+
+
+

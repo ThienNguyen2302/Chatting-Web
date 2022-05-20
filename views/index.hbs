@@ -1,0 +1,33 @@
+              <ul class="navbar-nav ml-auto">
+              <li class="nav-item ml-auto">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </nav>
+<div class="container my-auto">
+  <table class="table table-striped border">
+    <thead>
+      <tr>
+          <th>STT</th>
+          <th>Họ và tên</th>
+          <th>Email</th>
+          <th>Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each users}}
+          <tr id="{{this.id}}">
+              <td>{{@index}}</td>
+              <td><a href="/chat/{{this.id}}">{{this.name}}</a></td>
+              <td>{{this.email}}</td>
+          </tr>
+      {{/each}}
+    </tbody>
+  </table>
+  <p id="total">Tổng số người dùng: <strong class="text-danger">{{users.length}}</strong></p>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+</script>
+
