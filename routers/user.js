@@ -140,7 +140,7 @@ router.post("/register",registerValidator,(req,res) => {
 })
 
 router.get("/", Auth.authorize, (req,res) => {
-  const account = req.session.user
+  const account = req.session.user;
   User.find({}, function (err, users) {
     users = users.filter(u => u.email !== account.email)
     var context = {
@@ -151,9 +151,9 @@ router.get("/", Auth.authorize, (req,res) => {
           id: user._id
         };
       }),
-      account: account
+      fullname: req.session.user.fullname,
     };
-    res.render("index", context);
+    return res.render("index", context);
   });
 })
 
@@ -171,21 +171,3 @@ router.get("/logout", (req,res) => {
 })
 
 module.exports = router
-
-// User.find({
-  // })
-  // .then(users=> {
-  //   users = users.filter(u => u.email !== account.email)
-  //   var context = {
-  //     users: users.map(function (user) {
-  //       return {
-  //         email: user.email,
-  //         name: user.fullname,
-  //       };
-  //     }),
-  //   };
-  //   res.render("index", {context})
-  // })
-  // .catch(e => {
-  //   console.log(e)
-  // })
