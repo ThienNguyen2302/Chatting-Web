@@ -8,6 +8,14 @@ const User = require("../model/user")
 router.get("/:id", Auth.authorize ,async (req,res) => {
     let id = req.params.id
 
+    // check if user is exist
+    let receiver = await User.findById(id).catch(e => {
+      console.log(e)
+    })
+    if(!receiver) {
+      return res.redirect("/")
+    }
+    
     //get conversation
     let conver = await Conversation.findOne({
         user1: req.session.user._id,
@@ -27,24 +35,15 @@ router.get("/:id", Auth.authorize ,async (req,res) => {
             conver = await conver.save()
         }
     }
+
+    //session for room id
     req.session.room = conver._id
-    var data,receiver_fullname;
-    User.find({}, function (err, users) {
-        users = users.filter(u => u.email !== req.session.user.email)
-        data = {
-          users: users.map(function (user) {
-            return {
-              email: user.email,
-              name: user.fullname,
-              id: user._id
-            };
-          })
-        };
-      });
+
+    let users = await User.find({})
+    users = users.filter(u => u.email !== req.session.user.email)
+    //get message in the room
     const messages = await Messages.find({room: conver._id}).sort({time: 1})
-    User.findOne({_id:id}, (err, user)=> {
-        receiver_fullname=user.fullname;
-    });
+
     var context = {
         messages: messages.map(function (message) {
             let style;
@@ -61,11 +60,19 @@ router.get("/:id", Auth.authorize ,async (req,res) => {
             time: message.time
           };
         }),
+
+        users: users.map(function (user) {
+          return {
+            email: user.email,
+            name: user.fullname,
+            id: user._id
+          };
+        }),
         
         roomid: conver._id,
         userid: req.session.user._id,
-        userfullname:req.session.user.fullname,
-        data,
+        userfullname: req.session.user.fullname,
+        receiver_fullname: receiver.fullname
       };
     return res.render("chat", context)
 })
