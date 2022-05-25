@@ -53,11 +53,13 @@ router.get("/:id", Auth.authorize ,async (req,res) => {
             else {
                 style = "me"
             }
+            
           return {
             sender: message.user,
             style: style,
             message: message.message,
-            time: message.time
+            time: message.time.getDate()+'-'+(message.time.getMonth()+1)+'-'+message.time.getFullYear()+' '
+            +message.time.getHours()+":"+message.time.getMinutes()
           };
         }),
 

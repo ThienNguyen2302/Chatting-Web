@@ -22,16 +22,16 @@
 <div class="container" >
     <div class="row">
         <div class="col-3" id="list_user">
-            <div class="list-user-chat-item row">
-                {{#each users}}
+            {{#each users}}
+                <div class="list-user-chat-item row">
                     <div class="col-3">
                         <img class="img-profile rounded-circle width="60" height="60"" src="/images/user.jpg">
                     </div>
                     <div class="col-9 d-flex justify-content-start mt-3">
                         <a class='ml-2' href="/chat/{{this.id}}">{{this.name}}</a>
                     </div>
-                {{/each}}
-            </div> 
+                </div>
+            {{/each}} 
         </div>
         <div class="col-6">
             <div style="border-radius:20px" class="card shadow-lg h-40 mb-2">
@@ -49,6 +49,9 @@
                 <div style= "display: block;" class="{{this.style}} p-1">
                     {{this.message}}
                 </div>
+                {{!-- <div class="{{this.style}} bg-white">
+                    {{this.time}}   
+                </div> --}}
                 {{/each}}
             </div>
             <div class="row mt-2">
