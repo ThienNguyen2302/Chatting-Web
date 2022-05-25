@@ -28,7 +28,19 @@ router.get("/:id", Auth.authorize ,async (req,res) => {
         }
     }
     req.session.room = conver._id
-    let users,receiver_fullname;
+    var data,receiver_fullname;
+    User.find({}, function (err, users) {
+        users = users.filter(u => u.email !== req.session.user.email)
+        data = {
+          users: users.map(function (user) {
+            return {
+              email: user.email,
+              name: user.fullname,
+              id: user._id
+            };
+          })
+        };
+      });
     const messages = await Messages.find({room: conver._id}).sort({time: 1})
     User.findOne({_id:id}, (err, user)=> {
         receiver_fullname=user.fullname;
@@ -53,7 +65,7 @@ router.get("/:id", Auth.authorize ,async (req,res) => {
         roomid: conver._id,
         userid: req.session.user._id,
         userfullname:req.session.user.fullname,
-        receiver_fullname,
+        data,
       };
     return res.render("chat", context)
 })
